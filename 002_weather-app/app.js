@@ -1,7 +1,21 @@
 const request = require('request');
+const yargs = require('yargs');
 require('dotenv').config();
 
-const addressQuery = '1600%20pennsylvania%20ave%20nw';
+const argv = yargs
+  .options({
+    a: {
+      demand: true,
+      alias: 'address',
+      describe: 'Address to fetch weather for',
+      string: true
+    }
+  })
+  .help()
+  .alias('help', 'h').argv;
+
+const { address } = argv;
+const addressQuery = encodeURIComponent(address);
 
 request(
   {
