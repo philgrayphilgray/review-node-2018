@@ -20,8 +20,8 @@ const gecodeAddress = (address, callback) => {
         const { lat, lng } = results.geometry.location;
         callback(undefined, {
           address: formatted_address,
-          latitude: lat,
-          longitude: lng
+          lat,
+          lng
         });
       }
     }
