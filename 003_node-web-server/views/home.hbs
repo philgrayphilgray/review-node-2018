@@ -9,14 +9,12 @@
 </head>
 
 <body>
+    {{> header}}
     <main>
-        <h1>{{pageTitle}}</h1>
-        <p>{{message}}</p>
+        <p>{{screamIt message}}</p>
 
     </main>
-    <footer>
-        <p>&copy; {{currentYear}}</p>
-    </footer>
+    {{> footer}}
 </body>
 
 </html>
