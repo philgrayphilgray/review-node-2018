@@ -1,17 +1,26 @@
 const express = require('express');
+const hbs = require('hbs');
 
 const app = express();
+const port = '3000';
 
-app.get('/', (req, response) => {
-  //   response.send('<h1>Hello Express</h1>');
-  response.send({
-    name: 'Phil',
-    likes: ['Guitar', 'Beer']
+app.set('view engine', 'hbs');
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', (req, res) => {
+  res.render('home.hbs', {
+    pageTitle: 'Home Page',
+    currentYear: new Date().getFullYear(),
+    message:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque quod nulla consequuntur eveniet ipsum, mollitia ipsa at impedit, non officia harum quo quis cupiditate reprehenderit, repellendus obcaecati eius. Velit, aliquid?'
   });
 });
 
 app.get('/about', (req, res) => {
-  res.send('About Page');
+  res.render('about.hbs', {
+    pageTitle: 'About Page',
+    currentYear: new Date().getFullYear()
+  });
 });
 
 app.get('/bad', (req, res) => {
@@ -20,4 +29,6 @@ app.get('/bad', (req, res) => {
   });
 });
 
-app.listen(3000);
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}...`);
+});
