@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
+    "dev": "nodemon server.js -e js,hbs",
+    "dev:maintenance": "NODE_ENV=maintenance npm run dev",
     "publishheroku":
       "cd ../ && git subtree push --prefix=003_node-web-server heroku-node-web-server master || true"
   },

@@ -21,7 +21,11 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.render('maintenance.hbs');
+  if (process.env.NODE_ENV === 'maintenance') {
+    res.render('maintenance.hbs');
+  } else {
+    next();
+  }
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -45,7 +49,16 @@ app.get('/about', (req, res) => {
   });
 });
 
-app.get('/bad', (req, res) => {
+app.get('/projects', (req, res) => {
+  res.render('projects.hbs', {
+    pageTitle: 'Projects Page',
+    pageMessage: 'Welcome to the projects page.'
+  });
+});
+
+app.get('');
+
+app.get('*', (req, res) => {
   res.send({
     errorMessage: 'Unable to handle request.'
   });
