@@ -16,6 +16,8 @@ const todos = [
   }
 ];
 
+const todosUrl = '/todos/';
+
 beforeEach(done => {
   Todo.remove({})
     .then(() => {
@@ -29,7 +31,7 @@ describe('POST /todos', () => {
     const text = 'Test todo text';
 
     request(app)
-      .post('/todos')
+      .post(todosUrl)
       .send({ text })
       .expect(200)
       .expect(res => {
@@ -50,7 +52,7 @@ describe('POST /todos', () => {
 
   it('should not create todo with invalid body data', done => {
     request(app)
-      .post('/todos')
+      .post(todosUrl)
       .send({})
       .expect(400)
       .end((err, res) => {
@@ -68,7 +70,7 @@ describe('POST /todos', () => {
 describe('GET /todos', () => {
   it('should get all todos', done => {
     request(app)
-      .get('/todos')
+      .get(todosUrl)
       .expect(200)
       .expect(res => {
         expect(res.body.todos.length).toBe(2);
@@ -79,7 +81,7 @@ describe('GET /todos', () => {
 
 describe('GET /todos/:id', () => {
   it('should return todo doc', done => {
-    const url = `/todos/${todos[0]._id}`;
+    const url = todosUrl + todos[0]._id;
     console.log(url);
     request(app)
       .get(url)
@@ -91,7 +93,7 @@ describe('GET /todos/:id', () => {
   });
   it('should return 404 if todo not found', done => {
     const fakeId = new ObjectID();
-    const url = `/todos/${fakeId}`;
+    const url = todosUrl + fakeId;
     console.log(url);
 
     request(app)
@@ -101,11 +103,55 @@ describe('GET /todos/:id', () => {
   });
   it('should return 404 for non-object ids', done => {
     const invalidId = '123';
-    const url = `/todos/${invalidId}`;
+    const url = todosUrl + invalidId;
     console.log(url);
 
     request(app)
       .get(url)
+      .expect(404)
+      .end(done);
+  });
+});
+
+describe('DELETE /todos/:id', () => {
+  it('should remove a todo', done => {
+    const { _id } = todos[1];
+    const url = todosUrl + _id;
+    console.log(url);
+    request(app)
+      .delete(url)
+      .expect(200)
+      .expect(res => {
+        expect(res.body.todo._id).toBe(_id.toHexString());
+      })
+      .end((err, res) => {
+        if (err) {
+          return done(err);
+        }
+        Todo.findById(_id.toHexString())
+          .then(todo => {
+            expect(todo).toBeFalsy();
+            done();
+          })
+          .catch(e => done(e));
+      });
+  });
+  it('should return 404 if the todo not found', done => {
+    const fakeId = new ObjectID();
+    const url = todosUrl + fakeId;
+    console.log(url);
+    request(app)
+      .delete(url)
+      .expect(404)
+      .end(done);
+  });
+
+  it('should should return 404 if object id is invalid', done => {
+    const invalidId = '123';
+    const url = todosUrl + invalidId;
+    console.log(url);
+    request(app)
+      .delete(url)
       .expect(404)
       .end(done);
   });
