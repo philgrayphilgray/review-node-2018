@@ -1,5 +1,5 @@
 require('./config/config');
-const { pick } = require('lodash');
+const { pick, isBoolean } = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
@@ -73,7 +73,7 @@ app.patch('/todos/:id', (req, res) => {
     return res.status(404).send();
   }
 
-  if (_.isBoolean(body.completed) && body.completed) {
+  if (isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
   } else {
     body.completed = false;
