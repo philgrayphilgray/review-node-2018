@@ -9,19 +9,39 @@ socket.on('disconnect', function() {
 
 socket.on('newMessage', function(message) {
   console.log('Got new message: ', message);
+  var formattedTime = moment(message.createdAt).format('h:mma');
   var li = jQuery('<li></li>');
-  li.text(`${message.from}: ${message.text}`);
+  var em = jQuery('<em></em>');
+  var fromSpan = jQuery('<span></span>');
+  var strong = jQuery('<strong></strong>');
+  var messageSpan = jQuery('<span></span>');
+  em.text(' (' + formattedTime + '): ');
+  strong.text(message.from);
+  fromSpan.append(strong);
+  fromSpan.append(em);
+  messageSpan.text(message.text);
+  li.append(fromSpan).append(messageSpan);
 
   jQuery('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function(message) {
+  var formattedTime = moment(message.createdAt).format('h:mma');
   var li = jQuery('<li></li>');
-  var a = jQuery('<a target="_blank">My current location</a>');
+  var a = jQuery('<a target="_blank">My current location.</a>');
 
-  li.text(`${message.from}: `);
+  var em = jQuery('<em></em>');
+  var fromSpan = jQuery('<span></span>');
+  var strong = jQuery('<strong></strong>');
+  var messageSpan = jQuery('<span></span>');
+  em.text(' (' + formattedTime + '): ');
+  strong.text(message.from);
+  fromSpan.append(strong);
+  fromSpan.append(em);
   a.attr('href', message.url);
-  li.append(a);
+  messageSpan.append(a);
+  li.append(fromSpan);
+  li.append(messageSpan);
   jQuery('#messages').append(li);
 });
 
