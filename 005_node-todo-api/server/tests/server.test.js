@@ -282,7 +282,7 @@ describe('POST /users/', () => {
         User.findOne({ email })
           .then(user => {
             expect(user).toBeTruthy();
-            expect(user.password).toNotBe(password);
+            expect(user.password).not.toBe(password);
             done();
           })
           .catch(error => {
@@ -332,8 +332,7 @@ describe('POST /users/login', () => {
 
         User.findById(users[1])
           .then(user => {
-            expect(user.tokens[1]).toMatchObject({
-              _id: user.tokens[1]._id,
+            expect(user.toObject().tokens[1]).toMatchObject({
               access: 'auth',
               token: res.headers['x-auth']
             });
