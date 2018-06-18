@@ -10,3 +10,55 @@ The JavaScript event loop is like an official at a desk whose job is to review a
 Most of the applications are standard procedure. But every once in a while, there's a special application that requires another official's approval. When she encounters such an application, she calls in one of the interns and says, "Can you take this next door to get it approved?" The intern takes it and runs down the hall as the secretary drops off a new stack of applications. The official proceeds to process the new applications and eventually encounters another one that requires yet another official's approval. Again she calls for an intern, and with one intern still out, a second takes it and runs down the hall in a different direction. The secretary, as always, continues to bring in new applications.
 
 The interns come back at different times, asynchronously, depending on how long it takes to get the necessary approvals. Unlike the secretary, they're not supposed to bother the official. So when they return, they line up outside her door and wait to be called in, forming the callback queue. As soon as the official gets to the bottom of the current stack of applications from the secretary, she calls the first intern in line. The intern places the specially approved application on the corner of the official's desk and the official processes it. The secretary brings in some new applications. The official processes those and then calls in the next intern.
+
+
+### Authentication
+#### Creating New User
+
+* Get the email and password from the user
+* Pass this data as an object to the constructor for the User model
+* In a method on `UserSchema`, generate an auth token by passing in the user _id and access information to `jwt.sign`
+* Add this token to an array `user.tokens` on the user object
+* Return a promise that saves the user and returns a token
+* Use `toJSON` method on the `UserSchema` to override the `JSON` sent back the user, only sending the `_id` and `email`
+* From the route, use the token from the returned promise to set the response header
+* The `res.header()` takes two arguments, a key value pair, the first being the name of the header and the second being the value. `x-` in the header name designates a custom header. We can call it `x-auth` and set the token as the value. Send the user object.
+* Catch any errors.
+
+#### Creating Auth Middleware
+* Add a `statics` method to the `UserSchema` called `findByToken`
+* This method accepts a token argument and attempts to decode it by passing it as the first argument to `jwt.verify()`, with the secret as the second argument
+* If it cannot, return `Promise.reject()`
+* Otherwise, return the User object from the database by using the `findOne` method on the User model and passing an object of `_id` set to the `decoded._id`. Use nested querying within the object to check `tokens.token` for `token` and `tokens.access` for `'auth'`.
+* In a middleware function, assign `req.header('x-auth')` to `const token`
+* Pass this value into the the static `findByToken` method on the User model, which returns a promise
+* If there is no user, return `Promise.reject()`
+* Otherwise, set the `req.user` to the returned user and `req.token` to the returned token
+* Call `next()`.
+* Catch any errors.
+
+### Salt and Hash the Password Before Saving It
+* Use the schema `pre` method to attach an event before the model gets saved to the db, passing in `save` as the first argument and a callback function with the `next` argument as the second.
+* Inside the callback, use method available on instance called `.isModified`, which takes an individual property like `password` and returns true or false.
+* If the password is modified, hash the password, else call `next()`.
+* To hash the password, use the `genSalt` method from `bcryptjs`, passing in the the number of rounds as the first argument and a callback as the second.
+* The `genSalt` callback takes an `err` object as the first argument and `salt` as the second.
+* From within, the `genSalt` callback, call the `hash` method from `bcryptjs`, passing in the password as the first argument, the `salt` argument as the second, and a callback as a third.
+* Inside this callback, set `this.user.password` to `hash`.
+* Call `next()`.
+
+### Handling Login
+* Create a new `statics` method on `UserSchema` called `findByCredentials`, which accepts `email` and `password` as arguments
+* Return `User.findOne`, passing in the `email`
+* If no user is found, return a `Promise.reject()`
+* Otherwise, return a new promise
+* Inside this promise, use `bcrypt.compare` to compare the plaintext password from the user with the hashed password on the db document, passing in the plaintext password as the first argument, the hashed password from the db as the second, and a callback as the third with the following signature `(err, res)`
+* If `res` is true, which means the passwords match, `resolve` the promise, passing in the `user` document object
+* Else, `reject()`
+* Create a post route for `/users/login`
+* Inside the route callback, restructure the email and password from the request `body` object
+* Use the `findByCredentials` method on the `User` model, passing in the restructured `email` and `password`
+* In the chained `then` block, return `user.generateAuthToken()`, chaining a then block with a callback that captures the resolved `token`
+* Set the response object `header`, passing in `x-auth` as the key and the `token` object as the value
+* Send the `user` object in the response
+* Catch/handle any errors
