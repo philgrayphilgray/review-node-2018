@@ -16,7 +16,7 @@ io.on('connection', socket => {
   console.log('New user connected.');
 
   socket.on('createMessage', newMessage => {
-    socket.emit('newMessage', {
+    io.emit('newMessage', {
       ...newMessage,
       createdAt: new Date().getTime()
     });
