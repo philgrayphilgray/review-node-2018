@@ -1,6 +1,8 @@
 # Review Node
 
-* Projects and Exercises from [The Complete Node.js Developer Course (2nd Edition)](https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/overview)
+Projects and Exercises from: 
+* [The Complete Node.js Developer Course (2nd Edition)](https://www.udemy.com/the-complete-nodejs-developer-course-2/learn/v4/overview)
+* [Advanced Node](https://app.pluralsight.com/library/courses/nodejs-advanced/table-of-contents)
 
 ## Notes/Thoughts
 ### JavaScript Event Loop (A Dangerously Extended Metaphor)
@@ -62,3 +64,6 @@ The interns come back at different times, asynchronously, depending on how long 
 * Set the response object `header`, passing in `x-auth` as the key and the `token` object as the value
 * Send the `user` object in the response
 * Catch/handle any errors
+
+
+
