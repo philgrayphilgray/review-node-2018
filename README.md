@@ -65,5 +65,95 @@ The interns come back at different times, asynchronously, depending on how long 
 * Send the `user` object in the response
 * Catch/handle any errors
 
+### V8 Options
+
+* View all V8 options
+
+```bash
+node --v8-options
+```
+
+* Search for V8 options
+
+```bash
+node --v8-options | grep gc
+```
+
+* View all options "in progress"
+
+```bash
+node --v8-options | grep "in progress"
+```
+
+### Node's CLI and REPL
+
+
+* Use autocomplete <kbd>TAB</kbd>+<kbd>TAB</kbd>
+* Setup readlinwrap utility for Node
+```bash
+homebrew rlwrap
+NODE_NO_READLINE=1 rlwrap node
+```
+....and then <kbd>CTRL</kbd>+<kbd>r</kbd> in Node
+
+* View all '.' commands
+```node
+.help
+```
+* Save REPL session to disk
+```node
+.save <filename>
+```
+
+* Access last evaluated value
+```node
+_
+```
+* Create custom REPL sessions using the built-in `repl` module
+```js
+// repl.js
+const repl = require('repl');
+
+repl.start({
+	ignoreUndefined: true,
+	replMode: repl.REPL_MODE_STRICT
+	});
+```
+...and then
+```node
+node repl.js
+```
+
+...add a library to the global context
+
+```js
+// ...custom repl code
+r.context.lodash = require('lodash');
+```
+
+* View all node options
+
+```bash
+node --help
+```
+
+* Syntax check script without executin
+```bash
+node -c <script>
+```
+* Evaluate script and print result
+```bash
+node -p <script>
+```
+* Preload/require a module before running script
+```bash
+node -r babel-core <script>
+```
+* Access the array of arguments
+```node
+process.argv.slice(1)
+```
+
+
 
 
