@@ -153,6 +153,30 @@ node -r babel-core <script>
 ```node
 process.argv.slice(1)
 ```
+### Global Object, Process, and Buffer
+* The one global object is called `global`
+
+* View all global methods
+<kbd>Tab</kbd>+<kbd>Tab</kbd> in REPL
+
+* View all global properties
+```node
+global
+```
+
+* Communicate with the node process through the standard streams: `stdout`, `stdin`, `stderr`
+* These are pre-established ready streams, and cannot be closed
+* `process` is an instance of event emitter
+* `exit` event:
+```js
+process.on('exit', code => {
+	// do one final sync operation before node process terminates
+	// sync operations only; cannot use the event loop
+})
+
+```
+
+
 
 
 
