@@ -177,6 +177,47 @@ process.on('exit', code => {
 ```
 
 
+* Force node process to exit on `uncaughtException`
+
+```js
+process.on('uncaughtException', err => {
+console.error(err);
+
+// Force exit 
+process.exit(1);
+}
+```
+
+* A Buffer is a chunk of memory allocated outside of the V8 heap
+* We can put some data inside that memory, and the memory can be interpreted in many ways
+* Whatever we place in the buffer does not have any character encoding
+* To read it, we need to specify an encoding 
+* If we don't specify an encoding, we get back a `Buffer` object
+* Once a buffer is allocated, it cannot be resized
+
+* Allocate and fill a Buffer
+```node
+Buffer.alloc(8)
+```
+
+* Allocate unfilled Buffer and then fill with `.fill()`
+```node
+Buffer.allocUnsafe(8).fill()
+```
+
+* Allocate a Buffer with `Buffer.from()` method
+
+* Logging a Buffer from a UTF-8 string example: Buffer represents character with its internal UTF-8 represenation
+* Buffers are useful when we need to read an image from a TCP stream, or a compressed file, or any other form of binary access
+* Buffers have array-like methods such as `includes`, `indexOf`, and `slice`
+* But the returned Buffer will share the same memory with the original Buffer 
+
+* When converting streams of binary data, use the `StringDecoder` module. It handles multibyte characters much better.
+* It preserves the incomplete encoded characters internally until it's complete and then returns the result
+* The default `toString` method does not do that
+* Always use `stringDecoder` if you're receiving UTF-8 bytes as chunks in a stream
+
+
 
 
 
