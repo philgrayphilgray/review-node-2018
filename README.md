@@ -217,7 +217,22 @@ Buffer.allocUnsafe(8).fill()
 * The default `toString` method does not do that
 * Always use `stringDecoder` if you're receiving UTF-8 bytes as chunks in a stream
 
+### `require()`
+#### To execute a `require` call, Node goes through the following steps:
+* Resolving: to find the absolute file path of a module
+* Loading: the content of the file at the resolved path
+* Wrapping: gives every module its private scope, and makes require local to every module
+* Evaluating: what the VM eventually does with the code
+* Caching: so that when we require this module again, we don't repeat all the steps
 
+#### The `module` object
+* includes a `paths` array that starts at the current directory and goes all the way up to the root directory
+* The resolve step returns immediately for core modules
+
+* To only resolve a module and not execute it, use `require.resolve()`; it will throw an error if the file does not exist but will not load it
+* Node actuall first looks to resolve a module in the root, and then moves up to towards the current directory
+* Modules don't have to be files; we can create a directory and place an `index.js` file in it; we can use any other file name as the start file by setting `main` in the module's `package.json`.
+ 
 
 
 
