@@ -233,7 +233,38 @@ Buffer.allocUnsafe(8).fill()
 * Node actuall first looks to resolve a module in the root, and then moves up to towards the current directory
 * Modules don't have to be files; we can create a directory and place an `index.js` file in it; we can use any other file name as the start file by setting `main` in the module's `package.json`.
  
+* When there's no extension in the `require()`, Node will first look to resolve it as `.js`, then `.json`, and finally `.node`.
 
+#### C++ Addons
+* Node's addon example: [https://nodejs.org/api/addons.html](https://nodejs.org/api/addons.html
+)
 
+### Wrapping and caching modules
+* Each module gets wrapped in `require('module').wrapper` function with 5 arguments: `exports`, `require`, `module`, `__filename`, `__dirname`
+* This function wrapping process keeps the top level variables scoped to the module
+* The wrapping function's return value is an object reference to `exports`
+* `exports` is simply a variable reference to `module.exports`
+* We can test whether a module is being run as a script or required by checking `require.main == module`
 
+* Node caches the first module call
+* To ensure that it gets called each time, wrap `module.exports` object in a function that returns the object and execute the `require()()` as a function.
+
+### NPM
+
+* Install with npm directly from last commit on the master branch on github
+```bash
+npm i expressjs/express
+```
+
+* Use a hash to install from a different branch
+* To check what a package will install without actually installing it, use `--dry-run` flag
+* Show globally installed packages, limited to top level: `npm ls -g --depth=0`
+* Get a description for each package: `npm ll -g --depth=0`
+* Show the list in json: `npm ls -g --depth=0 --json`
+* To see a list of all npm configurations: `npm config list -l`
+* Search npm packages with `npm search <string>`
+* Lockdown all dependency version with `npm shrinkwrap`
+* Open the homepage of a package: `npm home <package>`
+* Open the repo of the package: `npm repo <package>`
+* Remove installed packages not in `package.json`: `npm prune`
 
