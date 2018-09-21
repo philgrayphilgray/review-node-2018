@@ -268,3 +268,33 @@ npm i expressjs/express
 * Open the repo of the package: `npm repo <package>`
 * Remove installed packages not in `package.json`: `npm prune`
 
+
+### Async
+#### setTimeout and the Event Loop
+* When executed, `setTimeout` will push the callback to the queue where it will wait for an opening in the call stack, even if the timeout is 0s
+* The timer delay is not a time to execution, but rather a minimum time to execution
+* Node's `setImmediate` will take precendence over `setTimeout`, and is recommended for when you want something to execute on the next tick
+* Node also has a `process.nextTick`
+
+#### Callbacks, Promises, Async/Await
+* With the callback approach, the user of the api would supply a function as the callback to an argument
+* With the promise approach, the api returns a promise, so the user can chain a `then` method on the return of the function execution
+* If you want to convert to promises, keep the callback mechanism and add a promise interface to it
+* In the function paramaters, give the callback a default value of an empty function; wrap the function return in a `return new Promise`; where you pass an `error` object to the callback, add a `reject(error)`; where you would call the callback with any arguments, also add a `resolve` with the arguments
+
+* TODO: practice converting callback-style async functions to also support promises
+
+
+#### EventEmitter
+* Emits named events and registers listening functions
+* First extend the `EventEmitter` class
+* Neither sync/async
+* Can react to the same signal multiple times by defining multiple listeners
+* Allow multiple external plugins to build functionality ontop of the application, like hook points to allow customizing the story around a state change
+* `process.once('uncaughtException')` // => `process.exit(1`)
+* if you have the need to define a new listener for the same event and have it execute first, use the `prependListener` method
+* Use the `removeListener` method to remove a listener
+
+
+ 
+
