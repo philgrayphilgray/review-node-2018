@@ -7,7 +7,7 @@
     <ul>
         <% users.forEach(user => { %>
         <li>
-            <%= user %>
+            <%- include('includes/user', {user}) %>
         </li>
         <% }); %>
     </ul>

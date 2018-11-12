@@ -10,13 +10,17 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/users', (req, res, next) => {
-  res.render('users', { pageTitle: 'users', path: req.route.path, users });
+  res.render('users', {
+    pageTitle: 'users',
+    path: req.route.path,
+    users
+  });
 });
 
 router.post('/add-user', (req, res, next) => {
   if (!req.body) res.sendStatus(400);
   users.push(req.body.username);
-  res.redirect('/');
+  res.redirect('/users');
 });
 
 module.exports = router;
