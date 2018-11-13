@@ -1,0 +1,21 @@
+<%- include('includes/head')%>
+</head>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <h1>
+        <%= pageTitle %>
+    </h1>
+    <h2>Products</h2>
+    <% if(hasProducts){ %>
+    <ul class="product-list">
+        <% prods.forEach(product => { %>
+            <li class="product"><%= product.title %></li>
+        <% }); %>
+    </ul>
+    <% }  else { %>
+        <p>Sorry. No products.</p>
+        <% } %>
+</body>
+
+</html>
